@@ -11,9 +11,9 @@ public interface UserService {
 
     Flux<UserDto> findAll();
 
-    Flux<UserDto> findAllByFirstName(String firstName);
+    Flux<UserDto> findAllByUserName(String userName);
 
     Mono<UserDto> findById(String id);
 
-    Mono<String> delete(String id);
+    Mono<Void> delete(String id);
 }

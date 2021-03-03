@@ -38,22 +38,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Flux<UserDto> findAll() {
-        return null;
+        return userRepository.findAll().map(this::mapToDto);
     }
 
     @Override
-    public Flux<UserDto> findAllByFirstName(String firstName) {
-        return null;
+    public Flux<UserDto> findAllByUserName(String userName) {
+        return userRepository.findAllByUserNameIsLike(userName).map(this::mapToDto);
     }
 
     @Override
     public Mono<UserDto> findById(String id) {
-        return null;
+        return userRepository.findById(id).map(this::mapToDto);
     }
 
     @Override
-    public Mono<String> delete(String id) {
-        return null;
+    public Mono<Void> delete(String id) {
+        return userRepository.deleteById(id);
     }
 
     private UserDto mapToDto(User user) {

@@ -3,6 +3,7 @@ package com.example.springwebfluxmongodb.services;
 import com.example.springwebfluxmongodb.data.User;
 import com.example.springwebfluxmongodb.dto.UserDto;
 import com.example.springwebfluxmongodb.repositories.UserRepository;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -23,9 +24,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDto> updateUser(UserDto userDto) {
-        return Mono.just(userDto)
-                .flatMap(user -> userRepository.findById(user.getId()))
-                .map()
+        return Mono.just(userDto.getId())
+                .flatMap(userRepository::findById)
+                .map(user -> {
+                    ModelMapper mapper = new ModelMapper();
+                    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+                    mapper.map(userDto, user);
+                    return user;
+                })
                 .flatMap(userRepository::save)
                 .map(this::mapToDto);
     }
@@ -60,9 +66,5 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         new ModelMapper().map(userDto, user);
         return user;
-    }
-
-    private <T> T objectToObject(T tObject) {
-
     }
 }

@@ -1,6 +1,7 @@
 package com.example.springwebfluxmongodb.controllers;
 
 import com.example.springwebfluxmongodb.data.User;
+import com.example.springwebfluxmongodb.dto.UserDto;
 import com.example.springwebfluxmongodb.services.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public Mono<User> createUser(@RequestBody User user) {
+    public Mono<UserDto> createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 }

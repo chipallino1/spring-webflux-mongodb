@@ -17,13 +17,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<UserDto> createUser(User user) {
-        return userRepository.save(user).map(this::mapToDto);
+    public Mono<UserDto> createUser(UserDto userDto) {
+        return Mono.just(userDto).map(this::mapToEntity).flatMap(userRepository::save).map(this::mapToDto);
     }
 
     @Override
-    public Mono<UserDto> updateUser(String id, UserDto userDto) {
-        return null;
+    public Mono<UserDto> updateUser(UserDto userDto) {
+        return Mono.just(userDto)
+                .flatMap(user -> userRepository.findById(user.getId()))
+                .map()
+                .flatMap(userRepository::save)
+                .map(this::mapToDto);
     }
 
     @Override
@@ -56,5 +60,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         new ModelMapper().map(userDto, user);
         return user;
+    }
+
+    private <T> T objectToObject(T tObject) {
+
     }
 }
